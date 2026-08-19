@@ -1,15 +1,17 @@
+import { useEffect } from 'react';
 import BoardCard from '../compontents/boardCard';
 import CreateBoardBtn from '../compontents/createBoardBtn';
+import { useBoardStore } from '../store/useBoardStore';
 import styles from './home.module.scss';
 
 
-const mockBoards = [
-  { id: '1', title: 'Задачи по учебе 📚' },
-  { id: '2', title: 'План Honey-Bear 🐻' },
-  { id: '3', title: 'Покупки и быт 🛒' },
-];
-
 export default function HomePage(){
+    const {boards, isLoading, error, fetchBoards} = useBoardStore();
+
+    useEffect(() => {
+        fetchBoards()
+    }, [fetchBoards])
+    
     const handleCreateBoard = () => {
         alert('Тут в будущем будет открываться модальное окно создания доски!');
     }
@@ -20,13 +22,17 @@ export default function HomePage(){
                 <span className={styles.icon}>👤</span>
                 <h2>Мои рабочие пространства</h2>
             </div>
+            {isLoading && <p className={styles.info}>Загрузка досок...</p>}
+            {error && <p className={styles.error}>{error}</p>}
 
-            <div className={styles.grid}>
-                {mockBoards.map((board) => (
-                    <BoardCard key={board.id} id={board.id} title={board.title} />
-                ))}
-                <CreateBoardBtn onClick={handleCreateBoard} />
-            </div>
+            {!isLoading && !error && (
+                <div className={styles.grid}>
+                    {boards.map((board) => (
+                        <BoardCard key={board.id} id={board.id} title={board.title} />
+                    ))}
+                    <CreateBoardBtn onClick={handleCreateBoard} />
+                </div>
+            )}
         </div>
     )
 }
