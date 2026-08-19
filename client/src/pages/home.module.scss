@@ -1,0 +1,29 @@
+.container{
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  color: #172b4d;
+
+  .icon {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+// Сетка для плиток досок: адаптивно переносится, если экран маленький
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
