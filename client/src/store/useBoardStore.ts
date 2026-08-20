@@ -28,6 +28,7 @@ interface BoardState{
     isLoading: boolean;
     error: string | null;
     fetchBoards: () => Promise<void>;
+    createBoard: (title: string) => Promise<void>
 }
 
 const useBoardStore = create<BoardState>((set) => ({
@@ -48,6 +49,15 @@ const useBoardStore = create<BoardState>((set) => ({
                     isLoading: false
                 })
             }
+        }
+    },
+    createBoard: async(title: string) => {
+        try {
+            const response = await api.post<Board>('/api/boards', {title});
+            set((state) => ({boards: [...state.boards, response.data]}));
+        } catch (error: unknown) {
+            if(error instanceof AxiosError)
+                set({error: error.response?.data?.error || 'Не удалось создать доску'})
         }
     }
 }))

@@ -42,5 +42,27 @@ app.get('/api/boards', async (req: Request, res: Response) => {
     }
 })
 
+app.post('/api/board', async (req: Request, res: Response) => {
+    try{
+        const {title} = req.body;
+
+        if(!title || title.trim() === ''){
+            return res.status(400).json({error: 'Название доски обязательно'})
+        }
+
+        // сохраняю доску в PostgreSQL через Prisma
+        const newBoard = await prisma.board.create({
+            data: {
+                title: title.trim(),
+            }
+        });
+
+        res.status(200).json(newBoard);
+    } catch(error){
+        console.error(error);
+        res.status(500).json({error: 'Не удалось создать доску'});
+    }
+})
+
 
 app.listen(port, () => console.log(`Server listnening at http://localhost:${port}`))

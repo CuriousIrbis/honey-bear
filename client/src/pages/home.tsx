@@ -1,19 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import BoardCard from '../compontents/boardCard';
 import CreateBoardBtn from '../compontents/createBoardBtn';
 import { useBoardStore } from '../store/useBoardStore';
 import styles from './home.module.scss';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
+interface IBoardFormInput{
+    boardTitle: string
+}
 
 export default function HomePage(){
-    const {boards, isLoading, error, fetchBoards} = useBoardStore();
-
+    const {boards, isLoading, error, fetchBoards, createBoard} = useBoardStore();
+    const [isModalOpen, setModalOpen] = useState(true);
+    
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: {errors, isValid}
+    } = useForm<IBoardFormInput>({
+        mode: 'onChange'
+    })
+ 
     useEffect(() => {
         fetchBoards()
     }, [fetchBoards])
     
-    const handleCreateBoard = () => {
-        alert('Тут в будущем будет открываться модальное окно создания доски!');
+    const onSubmit: SubmitHandler<IBoardFormInput> = async (data) => {
+        await createBoard(data.boardTitle);
+        reset();
+        setModalOpen(false);
     }
 
     return(
@@ -30,7 +46,50 @@ export default function HomePage(){
                     {boards.map((board) => (
                         <BoardCard key={board.id} id={board.id} title={board.title} />
                     ))}
-                    <CreateBoardBtn onClick={handleCreateBoard} />
+                    <CreateBoardBtn onClick={() => setModalOpen(true)} />
+                </div>
+            )}
+            {isModalOpen && (
+                <div className={styles.modalOverlay} onClick={ () => {setModalOpen(false); reset(); }}>
+                    <div className={styles.modalContent} onClick={(ev) => ev.stopPropagation()}>
+                        <h3>Создание доски</h3>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <input 
+                                type="text"
+                                placeholder='Укажите название доски'
+                                className={errors.boardTitle ? styles.inputError : ''}
+                                {...register('boardTitle', {
+                                    required: 'Название доски обязательно для заполнения',
+                                    minLength: {
+                                        value: 3,
+                                        message: 'Название должно быть не меньше 3 символов'
+                                    },
+                                    maxLength: {
+                                        value: 20,
+                                        message: 'Название должно быть не больше 20 символов'
+                                    }
+                                })}
+                                autoFocus
+                            />
+
+                            {errors.boardTitle && (
+                                <span className={styles.errorMessage}>{errors.boardTitle.message}</span>
+                            )}
+
+                            <div className={styles.modalActions}>
+                                <button
+                                    type='button'
+                                    onClick={() => {setModalOpen(false); reset()}}
+                                    className={styles.cancelBtn}
+                                >Отмена</button>
+                                <button
+                                    type='submit'
+                                    disabled={!isValid}
+                                    className={styles.submitBtn}
+                                >Создать</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>
