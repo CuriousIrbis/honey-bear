@@ -22,7 +22,9 @@ interface Board{
 // структура глобального хранилища zustand
 interface BoardState{
     boards: Array<Board>;
-    createBoard: (title: string) => void
+    createBoard: (title: string) => void;
+    addColumn: (boardId: string, title: string) => void;
+    addTask: (boardId: string, columnId: string, title: string) => void;
 }
 
 const useBoardStore = create<BoardState>()(
@@ -39,6 +41,44 @@ const useBoardStore = create<BoardState>()(
 
                 set((state) => ({boards: [...state.boards, newBoard]}));
             },
+
+            addColumn: (boardId: string, title: string) => {
+                set(state => ({
+                    boards: state.boards.map(board => {
+                        if(board.id != boardId) return board;
+
+                        const newColumn: Column = {
+                            id: crypto.randomUUID(),
+                            title: title.trim(),
+                            tasks: new Array<Task>
+                        };
+
+                        return { ...board, columns: [ ...board.columns, newColumn]};
+                    })
+                }))
+            },
+
+            addTask: (boardId: string, columnId: string, title: string) => {
+                set(state => ({
+                    boards: state.boards.map(board => {
+                        if(board.id !== boardId) return board;
+
+                        return {
+                            ...board,
+                            columns : board.columns.map(col => {
+                                if(col.id !== columnId) return col;
+
+                                const newTask: Task = {
+                                    id: crypto.randomUUID(),
+                                    title: title.trim(),
+                                };
+
+                                return { ...col, tasks: [ ...col.tasks, newTask]}
+                            })
+                        }
+                    })
+                }))
+            }
         }),
         {
             name: 'honey-bear-storage'

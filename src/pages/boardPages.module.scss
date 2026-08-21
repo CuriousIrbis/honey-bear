@@ -1,0 +1,143 @@
+.boardWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #0079bf; // Фирменный синий фон Trello
+  color: #fff;
+}
+
+.boardHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.backBtn {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+}
+
+.columnsContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-x: auto; // Включаем горизонтальный скролл для колонок
+  overflow-y: hidden;
+}
+
+.column {
+  flex-shrink: 0; // Запрещаем колонке сжиматься
+  width: 272px;
+  background-color: #f1f2f4;
+  border-radius: 12px;
+  color: #172b4d;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto; // Если задач много, скроллится только список задач
+  margin-bottom: 8px;
+}
+
+.taskCard {
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  cursor: pointer;
+  word-wrap: break-word;
+
+  &:hover {
+    background-color: #f9fafb;
+  }
+}
+
+.taskForm input {
+  width: 100%;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 14px;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:focus {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: text;
+  }
+}
+
+.addColumnCard {
+  flex-shrink: 0;
+  width: 272px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 6px;
+
+  input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    &:focus {
+      background-color: #fff;
+      color: #172b4d;
+      border-radius: 8px;
+      cursor: text;
+    }
+  }
+}
+
+.notFound {
+  text-align: center;
+  margin-top: 100px;
+  color: #172b4d;
+  a { color: #0079bf; }
+}
